@@ -22,7 +22,6 @@ int indiceCaracteres = 0;
 
 /*  estructuras */
 
-
 int main(int argc, char** argv) {
       printf("\n\t\tAlgoritmo de huffman \n\n");	
       ifstream archivo("archivo.txt");
@@ -34,37 +33,12 @@ int main(int argc, char** argv) {
          agregarCaracter(caracter);
       }                  // lo
       
-  /*     if(archivo.fail()){
-         
-         system("pause");
-         exit(0);
-      }else{
-         do{
-           char caracter;
-            archivo >> caracter;
-            printf("indice %c \n",caracter);
-           // 
 
-         }while (!archivo.eof());
-         archivo.close(); 
-   
-
-         
-      archivo.close();
-      } */
       printf("\n\n");
       for (int indice = 0; indice < indiceCaracteres; indice++){
                printf("%c - %i \n",caracteres[indice],frecuencias[indice]);
       }
       
-         
-         
-      /* 	 
-         ofstream fs("nombre.txt"); 
-         fs << "prueba hola mundo" << endl;
-         fs.close();
-      */
-
     cout<<"\n\n";
     system("pause");
     return 0;
@@ -78,10 +52,9 @@ void agregarCaracter(char caracter){
          if(caracter == caracteres[indice]){
                bandera = 1;
                frecuencias[indice]++;
-               printf("%c = %c aumentando la frecuencia %i \n",caracter,caracteres[indice],frecuencias[indice]);
+               printf(" %c = %c frecuencia %i \n",caracter,caracteres[indice],frecuencias[indice]);
          } else {
-               bandera = 0;
-               printf("  %c != %c ",caracter,caracteres[indice]);
+               printf(" %c != %c \n",caracter,caracteres[indice]);
          }
       }
       
