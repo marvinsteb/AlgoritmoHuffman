@@ -21,7 +21,8 @@ int frecuencias[LONJITUDMAXARCHIVO];
 int resultado[1000];
 int indiceCaracteres = 0; 
 int indiceResultado = 0;
-
+char rutaArchivo1[100];
+char rutaArchivo2[100];
 /* estructuras para el arbol huffman */
 struct Nodo{
     char caracter;
@@ -52,8 +53,12 @@ struct NodoRaiz *crearNodoRaiz(unsigned capacidad){
 }
 
 int main(int argc, char** argv) {
-      printf("\n\t\tAlgoritmo de huffman \n\n");	
-      ifstream archivo("archivo.txt");    
+      printf("\n\t\tAlgoritmo de huffman \n\n");
+      printf("\n\n ingresa la ruta del archivo de entrada\n");
+      scanf("%s", rutaArchivo1 );	
+      printf("\n\n ingresa la ruta del archivo de salida\n");
+       scanf("%s", rutaArchivo2 );  
+      ifstream archivo(rutaArchivo1);    
       char caracter;
       while (archivo.get(caracter)){
          agregarCaracter(caracter);
@@ -62,7 +67,7 @@ int main(int argc, char** argv) {
       for (int indice = 0; indice < indiceCaracteres; indice++){
                printf("%c : %i \n",caracteres[indice],frecuencias[indice]);
       }
-      remove("archivo2.txt");
+      remove(rutaArchivo2);
       printf("\n\n Codificando caracteres, utilizando el algoritmo de huffman \n");    
       codigicarArreglo(caracteres,frecuencias,indiceCaracteres);
       printf("\n\n");
@@ -160,7 +165,7 @@ void imprimeAregloCodificado(int arregloCaracteres[], int n){
 
 void creaArregloBitsFinal(int arregloCaracteres[], int altura){
     char caracter;    
-     ifstream archivo("archivo2.txt");  
+     ifstream archivo(rutaArchivo2);  
       while (archivo.get(caracter)){
          resultado[indiceResultado] = caracter;
          indiceResultado++;
@@ -254,14 +259,14 @@ void creaCadenaDeBitsFinal(struct Nodo *raiz, int arregloCaracteres[], int inici
 
 
 void encriptarArchivo(){
-    printf("\n resultado del archivo ");
 
-     ofstream archivo2("archivo2.txt");
+     ofstream archivo2(rutaArchivo2);
       
     if(archivo2.fail()){
     	printf("error al crear el archivo \n");
     } else {
-
+       
+       printf("\n resultado del archivo ");
        for (int indice = 0; indice < indiceResultado; ++indice){
         printf("%i",resultado[indice]);   
         archivo2 << resultado[indice];
@@ -277,7 +282,7 @@ void codigicarArreglo(char caracter[], int frecuencia[], int altura){
 
     imprimeCaracteres(raiz, arregloCaracteres, inicio);
       printf("\n encriptando...\n");
-      ifstream archivo("archivo.txt");    
+      ifstream archivo(rutaArchivo1);    
       char caracterArchivo;
       while (archivo.get(caracterArchivo)){
          creaCadenaDeBitsFinal(raiz,arregloCaracteres,inicio,caracterArchivo);
