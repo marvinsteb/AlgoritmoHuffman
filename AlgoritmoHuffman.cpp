@@ -18,7 +18,7 @@ void codigicarArreglo(char[], int[], int);
 /* variables */
 char caracteres[LONJITUDMAXARCHIVO];
 int frecuencias[LONJITUDMAXARCHIVO];
-int resultado[LONJITUDMAXARCHIVO];
+int resultado[1000];
 int indiceCaracteres = 0; 
 int indiceResultado = 0;
 
@@ -53,21 +53,17 @@ struct NodoRaiz *crearNodoRaiz(unsigned capacidad){
 
 int main(int argc, char** argv) {
       printf("\n\t\tAlgoritmo de huffman \n\n");	
-      ifstream archivo("archivo.txt");
-      int tamanio = 1;
-
-      
+      ifstream archivo("archivo.txt");    
       char caracter;
       while (archivo.get(caracter)){
          agregarCaracter(caracter);
-      }                  // lo
-      
-
-      printf("\n\n");
-      for (int indice = 0; indice < indiceCaracteres; indice++){
-               printf("%c - %i \n",caracteres[indice],frecuencias[indice]);
       }
-       
+      printf("\n\n Frecuencias de cada caracter \n");
+      for (int indice = 0; indice < indiceCaracteres; indice++){
+               printf("%c : %i \n",caracteres[indice],frecuencias[indice]);
+      }
+      remove("archivo2.txt");
+      printf("\n\n Codificando caracteres, utilizando el algoritmo de huffman \n");    
       codigicarArreglo(caracteres,frecuencias,indiceCaracteres);
       printf("\n\n");
       system("pause");
@@ -162,7 +158,7 @@ void imprimeAregloCodificado(int arregloCaracteres[], int n){
 }
 
 
-void guardarArchivoCodificado(int arregloCaracteres[], int altura){
+void creaArregloBitsFinal(int arregloCaracteres[], int altura){
     char caracter;    
      ifstream archivo("archivo2.txt");  
       while (archivo.get(caracter)){
@@ -170,11 +166,12 @@ void guardarArchivoCodificado(int arregloCaracteres[], int altura){
          indiceResultado++;
       }        
      archivo.close();
-	        
            for (int indice = 0; indice < altura; ++indice){
+            printf("%i", arregloCaracteres[indice]);
             resultado[indiceResultado] = arregloCaracteres[indice];
             indiceResultado++;
       } 
+      printf( "\n");
 
 }
 
@@ -228,20 +225,36 @@ void imprimeCaracteres(struct Nodo *raiz, int arregloCaracteres[], int inicio){
     }
 
     if (esHoja(raiz)){
-        cout << raiz->caracter << ": ";
+        printf("%c : ",raiz->caracter);
         imprimeAregloCodificado(arregloCaracteres, inicio);
-        guardarArchivoCodificado(arregloCaracteres, inicio);
     }
 }
 
-void codigicarArreglo(char caracter[], int frecuencia[], int altura){
-    struct Nodo *raiz = costruirArbolHufman(caracter, frecuencia, altura);
 
-    int arregloCaracteres[ALTURAARBOL], inicio = 0;
+void creaCadenaDeBitsFinal(struct Nodo *raiz, int arregloCaracteres[], int inicio, char caracter ){
 
-    imprimeCaracteres(raiz, arregloCaracteres, inicio);
+    if (raiz->izquierda){
+        arregloCaracteres[inicio] = 0;
+        creaCadenaDeBitsFinal(raiz->izquierda, arregloCaracteres, inicio + 1,caracter);
+    }
 
-    printf("\n resultado del archivo");
+    if (raiz->derecha){
+        arregloCaracteres[inicio] = 1;
+        creaCadenaDeBitsFinal(raiz->derecha, arregloCaracteres, inicio + 1,caracter);
+    }
+
+    if (esHoja(raiz)){
+        if(raiz->caracter == caracter){
+             printf("%c : ",raiz->caracter);
+            creaArregloBitsFinal(arregloCaracteres, inicio);
+        }
+        
+    }
+}
+
+
+void encriptarArchivo(){
+    printf("\n resultado del archivo ");
 
      ofstream archivo2("archivo2.txt");
       
@@ -255,5 +268,21 @@ void codigicarArreglo(char caracter[], int frecuencia[], int altura){
       }
 	archivo2.close();
     }
+}
+
+void codigicarArreglo(char caracter[], int frecuencia[], int altura){
+    struct Nodo *raiz = costruirArbolHufman(caracter, frecuencia, altura);
+
+    int arregloCaracteres[ALTURAARBOL], inicio = 0;
+
+    imprimeCaracteres(raiz, arregloCaracteres, inicio);
+      printf("\n encriptando...\n");
+      ifstream archivo("archivo.txt");    
+      char caracterArchivo;
+      while (archivo.get(caracterArchivo)){
+         creaCadenaDeBitsFinal(raiz,arregloCaracteres,inicio,caracterArchivo);
+      }
+      encriptarArchivo();
+    
 }
 
